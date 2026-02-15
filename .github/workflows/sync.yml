@@ -13,16 +13,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: test
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Sync upstream changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           # Add upstream remote
           git remote add upstream https://github.com/yt-dlp/yt-dlp.git
-          git fetch upstream
+          git fetch upstream master
 
           # Merge upstream changes, keeping our version on conflicts
           git merge upstream/master --no-edit --allow-unrelated-histories -X ours
