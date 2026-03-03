@@ -24,8 +24,8 @@ jobs:
           git remote add upstream https://github.com/yt-dlp/yt-dlp.git
           git fetch upstream
 
-          # Merge upstream changes, keeping our version on conflicts
-          git merge upstream/master --no-edit --allow-unrelated-histories -X ours
+          # Merge upstream changes
+          git merge upstream/master --no-edit
 
           # Push to your fork
           git push origin test
