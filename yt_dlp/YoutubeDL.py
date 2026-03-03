@@ -1849,7 +1849,7 @@ class YoutubeDL:
         new requests use the updated proxy settings.
         """
         original = self.params.get('proxy')
-        print(f"[info] {stage} stage: Using proxy: {proxy if proxy else 'None'}", flush=True)
+        self.to_screen(f"[info] {stage} stage: Using proxy: {proxy if proxy else 'None'}")
         if proxy is not None:
             self.params['proxy'] = proxy
         # Remove cached properties so they are rebuilt with the new proxy settings
@@ -1862,7 +1862,7 @@ class YoutubeDL:
             self.params['proxy'] = original
             self.__dict__.pop('proxies', None)
             self.__dict__.pop('_request_director', None)
-            print(f"[info] {stage} stage: Restored proxy to: {original if original else 'None'}", flush=True)
+            self.to_screen(f"[info] {stage} stage: Restored proxy to: {original if original else 'None'}")
 
     @_handle_extraction_exceptions
     def __extract_info(self, url, ie, download, extra_info, process):
