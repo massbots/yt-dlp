@@ -511,7 +511,7 @@ def create_parser():
     general.add_option(
         '--live-from-start',
         action='store_true', dest='live_from_start',
-        help='Download livestreams from the start. Currently experimental and only supported for YouTube and Twitch')
+        help='Download livestreams from the start. Currently experimental and only supported for YouTube, Twitch, and TVer')
     general.add_option(
         '--no-live-from-start',
         action='store_false', dest='live_from_start',
@@ -574,7 +574,8 @@ def create_parser():
                 '2021': ['2022', 'no-certifi', 'filename-sanitization'],
                 '2022': ['2023', 'no-external-downloader-progress', 'playlist-match-filter', 'prefer-legacy-http-handler', 'manifest-filesize-approx'],
                 '2023': ['2024', 'prefer-vp9-sort'],
-                '2024': ['mtime-by-default'],
+                '2024': ['2025', 'mtime-by-default'],
+                '2025': [],
             },
         }, help=(
             'Options that can help keep compatibility with youtube-dl or youtube-dlc '
@@ -605,6 +606,23 @@ def create_parser():
     network = optparse.OptionGroup(parser, 'Network Options')
     network.add_option(
         '--proxy', dest='proxy',
+        default=None, metavar='URL',
+        help=(
+            'Use the specified HTTP/HTTPS/SOCKS proxy. To enable SOCKS proxy, specify a proper scheme, '
+            'e.g. socks5://user:pass@127.0.0.1:1080/. Pass in an empty string (--proxy "") for direct connection'))
+    network.add_option(
+        '--info-proxy', dest='info_proxy',
+        default=None, metavar='URL',
+        help=(
+            'Use the specified HTTP/HTTPS/SOCKS proxy. To enable SOCKS proxy, specify a proper scheme, '
+            'e.g. socks5://user:pass@127.0.0.1:1080/. Pass in an empty string (--proxy "") for direct connection'))
+    network.add_option(
+        '--x-json-errors', dest='x_json_errors',
+        default=None,
+        help=(
+            'Enable json output for report_error'))
+    network.add_option(
+        '--download-proxy', dest='download_proxy',
         default=None, metavar='URL',
         help=(
             'Use the specified HTTP/HTTPS/SOCKS proxy. To enable SOCKS proxy, specify a proper scheme, '
@@ -882,6 +900,10 @@ def create_parser():
         dest='format_sort', default=[], type='str', action='callback',
         callback=_list_from_options_callback, callback_kwargs={'append': -1},
         help='Sort the formats by the fields given, see "Sorting Formats" for more details')
+    video_format.add_option(
+        '--format-sort-reset',
+        dest='format_sort', action='store_const', const=[],
+        help='Disregard previous user specified sort order and reset to the default')
     video_format.add_option(
         '--format-sort-force', '--S-force',
         action='store_true', dest='format_sort_force', metavar='FORMAT', default=False,
