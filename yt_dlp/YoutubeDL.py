@@ -1172,12 +1172,15 @@ class YoutubeDL:
         """
 
         if self.x_json_errors:
-            message = {'error': message, 'stage': self.last_stage}
+            payload = {'error': message, 'stage': self.last_stage}
             if self.last_stage:
-                message['stage'] = self.last_stage
+                payload['stage'] = self.last_stage
 
-            msg = json.dumps(message)
-            self.to_stderr(f'{msg}', *args, **kwargs)
+            # to_stderr(message, only_once=False) — accepts no other kwargs.
+            # Upstream started passing is_error / tb via report_error's **kwargs;
+            # forwarding them here TypeError'd yt-dlp mid-run. Keep the JSON
+            # emission side-effect only and let `trouble` receive the kwargs.
+            self.to_stderr(json.dumps(payload))
 
         self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
 
