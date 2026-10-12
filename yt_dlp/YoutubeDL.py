@@ -676,7 +676,6 @@ class YoutubeDL:
         except Exception as e:
             self.write_debug(f'Failed to enable VT mode: {e}')
 
-        # hehe "immutable" namespace
         self._out_files.console = next(filter(supports_terminal_sequences, (sys.stderr, sys.stdout)), None)
 
         if self.params.get('no_color'):
@@ -2441,8 +2440,7 @@ class YoutubeDL:
             selectors = []
             current_selector = None
             for type_, string_, start, _, _ in tokens:
-                # ENCODING is only defined in Python 3.x
-                if type_ == getattr(tokenize, 'ENCODING', None):
+                if type_ == tokenize.ENCODING:
                     continue
                 elif type_ in [tokenize.NAME, tokenize.NUMBER]:
                     current_selector = FormatSelector(SINGLE, string_, [])
